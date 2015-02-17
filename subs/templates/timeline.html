@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ request.user }}</h1>
+    <div style="float:right">Signed in as {{ request.user }}</div>
+    <h1>{{ user }}</h1>
+    <h3> {% if user.profile.private %}Private{% else %}Public{% endif %} User</h3>
+    <h3> {% if user.profile.private %}Not{% endif %} Following</h3>
+
+    {% for activity in activities %}
+        {{ activity }}
+        <hr>
+    {% endfor %}
 {% endblock %}
