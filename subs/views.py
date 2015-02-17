@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def user_timeline(request, username):
+    return render(request, 'timeline.html')
