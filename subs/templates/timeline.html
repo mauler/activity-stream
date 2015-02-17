@@ -12,7 +12,6 @@
             Not Following  | <a href="{% url 'follow' user.username %}">Follow</a>
         {% endif %}
     </h3>
-
     {% for activity in activities %}
         {{ activity }}
         <hr>
