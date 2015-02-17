@@ -22,3 +22,8 @@ def new_post(sender, instance, created, **kwargs):
 
 
 post_save.connect(new_post, sender=Post)
+
+
+class Profile(models.Model):
+    private = models.BooleanField(default=False)
+    user = models.OneToOneField(User)
