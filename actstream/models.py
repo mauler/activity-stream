@@ -26,16 +26,18 @@ class Follow(models.Model):
     """
     user = models.ForeignKey(user_model_label)
 
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.CharField(max_length=255)
-    follow_object = generic.GenericForeignKey()
+    # content_type = models.ForeignKey(ContentType)
+    # object_id = models.CharField(max_length=255)
+    # follow_object = generic.GenericForeignKey()
+
+    follow_object = models.ForeignKey(user_model_label, related_name='followed_by')
     actor_only = models.BooleanField("Only follow actions where "
                                      "the object is the target.", default=True)
     started = models.DateTimeField(default=now)
     objects = FollowManager()
 
     class Meta:
-        unique_together = ('user', 'content_type', 'object_id')
+        unique_together = ('user', 'follow_object')
 
     def __str__(self):
         return '%s -> %s' % (self.user, self.follow_object)
