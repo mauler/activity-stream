@@ -38,8 +38,7 @@ def follow(user, obj, send_action=True, actor_only=True, **kwargs):
     """
     check(obj)
     instance, created = get_model('actstream', 'follow').objects.get_or_create(
-        user=user, object_id=obj.pk,
-        content_type=ContentType.objects.get_for_model(obj),
+        user=user, follow_object_id=obj.pk,
         actor_only=actor_only)
     if send_action and created:
         action.send(user, verb=_('started following'), target=obj, **kwargs)
@@ -59,9 +58,7 @@ def unfollow(user, obj, send_action=False):
     """
     check(obj)
     get_model('actstream', 'follow').objects.filter(
-        user=user, object_id=obj.pk,
-        content_type=ContentType.objects.get_for_model(obj)
-    ).delete()
+        user=user, follow_object_id=obj.pk).delete()
     if send_action:
         action.send(user, verb=_('stopped following'), target=obj)
 
@@ -78,8 +75,8 @@ def is_following(user, obj):
     """
     check(obj)
     return get_model('actstream', 'follow').objects.filter(
-        user=user, object_id=obj.pk,
-        content_type=ContentType.objects.get_for_model(obj)
+        user=user, follow_object_id=obj.pk,
+        # content_type=ContentType.objects.get_for_model(obj)
     ).exists()
 
 

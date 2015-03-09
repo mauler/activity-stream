@@ -93,39 +93,38 @@ class ActionManager(GFKManager):
         if not obj:
             return qs.none()
 
-        check(obj)
-        actors_by_content_type = defaultdict(lambda: [])
-        others_by_content_type = defaultdict(lambda: [])
-
-        if kwargs.pop('with_user_activity', False):
-            object_content_type = ContentType.objects.get_for_model(obj)
-            actors_by_content_type[object_content_type.id].append(obj.pk)
-
-        follow_gfks = get_model('actstream', 'follow').objects.filter(
-            user=obj).values_list('content_type_id',
-                                  'object_id', 'actor_only')
-
-        for content_type_id, object_id, actor_only in follow_gfks.iterator():
-            actors_by_content_type[content_type_id].append(object_id)
-            if not actor_only:
-                others_by_content_type[content_type_id].append(object_id)
-
-        if len(actors_by_content_type) + len(others_by_content_type) == 0:
-            return qs.none()
-
-        for content_type_id, object_ids in actors_by_content_type.items():
-            q = q | Q(
-                actor_content_type=content_type_id,
-                actor_object_id__in=object_ids,
-            )
-        for content_type_id, object_ids in others_by_content_type.items():
-            q = q | Q(
-                target_content_type=content_type_id,
-                target_object_id__in=object_ids,
-            ) | Q(
-                action_object_content_type=content_type_id,
-                action_object_object_id__in=object_ids,
-            )
+        # check(obj)
+        # actors_by_content_type = defaultdict(lambda: [])
+        # others_by_content_type = defaultdict(lambda: [])
+        #
+        # if kwargs.pop('with_user_activity', False):
+        #     object_content_type = ContentType.objects.get_for_model(obj)
+        #     actors_by_content_type[object_content_type.id].append(obj.pk)
+        #
+        # follow_gfks = get_model('actstream', 'follow').objects.filter(
+        #     user=obj).values_list('follow_object_id', 'actor_only')
+        #
+        # for follow_object_id, actor_only in follow_gfks.iterator():
+        #     actors_by_content_type[content_type_id].append(object_id)
+        #     if not actor_only:
+        #         others_by_content_type[content_type_id].append(object_id)
+        #
+        # if len(actors_by_content_type) + len(others_by_content_type) == 0:
+        #     return qs.none()
+        #
+        # for content_type_id, object_ids in actors_by_content_type.items():
+        #     q = q | Q(
+        #         actor_content_type=content_type_id,
+        #         actor_object_id__in=object_ids,
+        #     )
+        # for content_type_id, object_ids in others_by_content_type.items():
+        #     q = q | Q(
+        #         target_content_type=content_type_id,
+        #         target_object_id__in=object_ids,
+        #     ) | Q(
+        #         action_object_content_type=content_type_id,
+        #         action_object_object_id__in=object_ids,
+        #     )
         return qs.filter(q, **kwargs)
 
 
@@ -139,8 +138,8 @@ class FollowManager(GFKManager):
         Filter to a specific instance.
         """
         check(instance)
-        content_type = ContentType.objects.get_for_model(instance).pk
-        return self.filter(content_type=content_type, object_id=instance.pk)
+        # content_type = ContentType.objects.get_for_model(instance).pk
+        return self.filter(follow_object_id=instance.pk)
 
     def is_following(self, user, instance):
         """
