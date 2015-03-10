@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('contenttypes', '0001_initial'),
+        ('subs', '0002_profile'),
     ]
 
     operations = [
@@ -19,17 +20,15 @@ class Migration(migrations.Migration):
             name='Action',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('actor_object_id', models.CharField(max_length=255)),
                 ('verb', models.CharField(max_length=255)),
                 ('description', models.TextField(null=True, blank=True)),
-                ('target_object_id', models.CharField(max_length=255, null=True, blank=True)),
                 ('action_object_object_id', models.CharField(max_length=255, null=True, blank=True)),
                 ('timestamp', models.DateTimeField(default=django.utils.timezone.now)),
                 ('public', models.BooleanField(default=True)),
                 ('data', jsonfield.fields.JSONField(null=True, blank=True)),
                 ('action_object_content_type', models.ForeignKey(related_name='action_object', blank=True, to='contenttypes.ContentType', null=True)),
-                ('actor_content_type', models.ForeignKey(related_name='actor', to='contenttypes.ContentType')),
-                ('target_content_type', models.ForeignKey(related_name='target', blank=True, to='contenttypes.ContentType', null=True)),
+                ('actor', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('target', models.ForeignKey(to='subs.Post')),
             ],
             options={
                 'ordering': ('-timestamp',),

@@ -54,9 +54,10 @@ class ActionManager(GFKManager):
         check(model)
         ctype = ContentType.objects.get_for_model(model)
         return self.public(
-            (Q(target_content_type=ctype) |
-             Q(action_object_content_type=ctype) |
-             Q(actor_content_type=ctype)),
+            # (Q(target_content_type=ctype) |
+            #  Q(action_object_content_type=ctype) |
+            #  Q(actor_content_type=ctype)),
+            Q(action_object_content_type=ctype),
             **kwargs
         )
 
@@ -69,12 +70,13 @@ class ActionManager(GFKManager):
         ctype = ContentType.objects.get_for_model(obj)
         return self.public(
             Q(
-                actor_content_type=ctype,
-                actor_object_id=obj.pk,
+                # actor_content_type=ctype,
+                actor_id=obj.pk,
             ) | Q(
-                target_content_type=ctype,
-                target_object_id=obj.pk,
-            ) | Q(
+                # target_content_type=ctype,
+                target_id=obj.pk,
+            ) |
+            Q(
                 action_object_content_type=ctype,
                 action_object_object_id=obj.pk,
             ), **kwargs)

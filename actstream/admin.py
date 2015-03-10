@@ -8,8 +8,8 @@ class ActionAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'actor', 'verb', 'target')
     list_editable = ('verb',)
     list_filter = ('timestamp',)
-    raw_id_fields = ('actor_content_type', 'target_content_type',
-                     'action_object_content_type')
+    # raw_id_fields = ('actor_content_type', 'target_content_type',
+    #                  'action_object_content_type')
 
 
 class FollowAdmin(admin.ModelAdmin):

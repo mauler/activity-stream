@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timesince import timesince as djtimesince
 from django.contrib.contenttypes.models import ContentType
+from subs.models import Post
 
 
 try:
@@ -73,18 +74,22 @@ class Action(models.Model):
         <a href="http://oebfare.com/">brosner</a> commented on <a href="http://github.com/pinax/pinax">pinax/pinax</a> 2 hours ago
 
     """
-    actor_content_type = models.ForeignKey(ContentType, related_name='actor')
-    actor_object_id = models.CharField(max_length=255)
-    actor = generic.GenericForeignKey('actor_content_type', 'actor_object_id')
+    # actor_content_type = models.ForeignKey(ContentType, related_name='actor')
+    # actor_object_id = models.CharField(max_length=255)
+    # actor = generic.GenericForeignKey('actor_content_type', 'actor_object_id')
+
+    actor = models.ForeignKey(user_model_label)
 
     verb = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
 
-    target_content_type = models.ForeignKey(ContentType, blank=True, null=True,
-                                            related_name='target')
-    target_object_id = models.CharField(max_length=255, blank=True, null=True)
-    target = generic.GenericForeignKey('target_content_type',
-                                       'target_object_id')
+    # target_content_type = models.ForeignKey(ContentType, blank=True, null=True,
+    #                                         related_name='target')
+    # target_object_id = models.CharField(max_length=255, blank=True, null=True)
+    # target = generic.GenericForeignKey('target_content_type',
+    #                                    'target_object_id')
+
+    target = models.ForeignKey(Post)
 
     action_object_content_type = models.ForeignKey(ContentType, blank=True, null=True,
                                                    related_name='action_object')
@@ -122,14 +127,14 @@ class Action(models.Model):
         Returns the URL to the ``actstream_actor`` view for the current actor.
         """
         return reverse('actstream_actor', None,
-                       (self.actor_content_type.pk, self.actor_object_id))
+                       (self.actor_id))
 
     def target_url(self):
         """
         Returns the URL to the ``actstream_actor`` view for the current target.
         """
         return reverse('actstream_actor', None,
-                       (self.target_content_type.pk, self.target_object_id))
+                       (self.target_id))
 
     def action_object_url(self):
         """
