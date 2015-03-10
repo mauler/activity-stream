@@ -91,11 +91,16 @@ class Action(models.Model):
 
     target = models.ForeignKey(Post)
 
-    action_object_content_type = models.ForeignKey(ContentType, blank=True, null=True,
-                                                   related_name='action_object')
-    action_object_object_id = models.CharField(max_length=255, blank=True, null=True)
-    action_object = generic.GenericForeignKey('action_object_content_type',
-                                              'action_object_object_id')
+    # action_object_content_type = models.ForeignKey(ContentType, blank=True, null=True,
+    #                                                related_name='action_object')
+    # action_object_object_id = models.CharField(max_length=255, blank=True, null=True)
+    # action_object = generic.GenericForeignKey('action_object_content_type',
+    #                                           'action_object_object_id')
+
+    action = None
+    action_object = None
+    action_object_object_id = None
+    action_object_content_type = None
 
     timestamp = models.DateTimeField(default=now)
 
