@@ -23,9 +23,11 @@ def setup_generic_relations(model_class):
     if django.VERSION[:2] >= (1, 7):
         related_attr_name = 'related_query_name'
     relations = {}
-    for field in ('actor', 'target', 'action_object'):
+    for field in ('action_object'):
+    # for field in ('actor', 'target', 'action_object'):
         attr = '%s_actions' % field
         attr_value = '%s_as_%s' % (related_attr_value, field)
+
         kwargs = {
             'content_type_field': '%s_content_type' % field,
             'object_id_field': '%s_object_id' % field,

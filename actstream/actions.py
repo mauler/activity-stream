@@ -105,9 +105,11 @@ def action_handler(verb, **kwargs):
         obj = kwargs.pop(opt, None)
         if obj is not None:
             check(obj)
-            setattr(newaction, '%s_object_id' % opt, obj.pk)
-            setattr(newaction, '%s_content_type' % opt,
-                    ContentType.objects.get_for_model(obj))
+            import ipdb
+            ipdb.set_trace()
+            setattr(newaction, '%s_id' % opt, obj.pk)
+            # setattr(newaction, '%s_content_type' % opt,
+            #         ContentType.objects.get_for_model(obj))
     if settings.USE_JSONFIELD and len(kwargs):
         newaction.data = kwargs
     newaction.save(force_insert=True)

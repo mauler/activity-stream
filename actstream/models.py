@@ -78,7 +78,7 @@ class Action(models.Model):
     # actor_object_id = models.CharField(max_length=255)
     # actor = generic.GenericForeignKey('actor_content_type', 'actor_object_id')
 
-    actor = models.ForeignKey(user_model_label)
+    actor = models.ForeignKey(user_model_label, related_name='actor_actions')
 
     verb = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -102,6 +102,10 @@ class Action(models.Model):
     public = models.BooleanField(default=True)
 
     objects = actstream_settings.get_action_manager()
+
+    @property
+    def actor_object_id(self):
+        return self.actor_id
 
     class Meta:
         ordering = ('-timestamp', )

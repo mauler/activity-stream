@@ -26,6 +26,8 @@ class ActionManager(GFKManager):
         Keyword arguments will be passed to Action.objects.filter
         """
         check(obj)
+        # import ipdb
+        # ipdb.set_trace()
         return obj.actor_actions.public(**kwargs)
 
     @stream
