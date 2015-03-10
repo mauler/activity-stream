@@ -1,8 +1,6 @@
-from collections import defaultdict
-
-from django.db.models import get_model
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Manager
 
 from actstream.gfk import GFKManager
 from actstream.decorators import stream
@@ -98,7 +96,7 @@ class ActionManager(GFKManager):
         # others_by_content_type = defaultdict(lambda: [])
         #
         # if kwargs.pop('with_user_activity', False):
-        #     object_content_type = ContentType.objects.get_for_model(obj)
+        # object_content_type = ContentType.objects.get_for_model(obj)
         #     actors_by_content_type[object_content_type.id].append(obj.pk)
         #
         # follow_gfks = get_model('actstream', 'follow').objects.filter(
@@ -128,7 +126,7 @@ class ActionManager(GFKManager):
         return qs.filter(q, **kwargs)
 
 
-class FollowManager(GFKManager):
+class FollowManager(Manager):
     """
     Manager for Follow model.
     """
@@ -159,16 +157,15 @@ class FollowManager(GFKManager):
             follow_object_id=actor.pk
         ).select_related('user')]
 
-    def following(self, user, *models):
+    def following(self, user):
         """
         Returns a list of actors that the given user is following (eg who im following).
         Items in the list can be of any model unless a list of restricted models are passed.
         Eg following(user, User) will only return users following the given user
         """
-        qs = self.filter(user=user)
-        ctype_filters = Q()
-        for model in models:
-            check(model)
-            # ctype_filters |= Q(content_type=ContentType.objects.get_for_model(model))
+        # ctype_filters = Q()
+        # for model in models:
+        # check(model)
+        # ctype_filters |= Q(content_type=ContentType.objects.get_for_model(model))
         # qs = qs.filter(ctype_filters)
-        return [follow.follow_object for follow in qs.fetch_generic_relations('follow_object')]
+        return [follow.follow_object for follow in self.filter(user=user)]
