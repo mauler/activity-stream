@@ -13,7 +13,7 @@ def timeline(request):
 
 
 def user_timeline(request, username):
-    user = User.objects.get(username=username)
+    user = User.objects.select_related('profile').get(username=username)
     user_actions = []
 
     if is_following(request.user, user) or not user.profile.private:
